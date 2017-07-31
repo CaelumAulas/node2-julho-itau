@@ -10,7 +10,7 @@
     "api"
   ],
   "author": "Marco Bruno",
-  "license": "MPL-2.0",
+  "license": "MPL-2.02",
   "dependencies": {
     "express": "^4.15.3",
     "express-load": "^1.1.16"
