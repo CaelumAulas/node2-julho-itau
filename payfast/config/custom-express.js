@@ -1,12 +1,10 @@
 module.exports = function() {
   const express = require('express')
   const load = require('express-load')
+  const bodyParser = require('body-parser')
   const app = express()
 
-  // const controllerPgamentos = require('../controllers/pagamentos')
-  // controllerPgamentos(app)
-  // require('../controllers/pagamentos')(app)
-  // require('../controllers/home')(app)
+  app.use(bodyParser.json())
 
   load('controllers').into(app)
 
