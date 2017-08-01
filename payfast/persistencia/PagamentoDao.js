@@ -4,7 +4,6 @@ class PagamentoDao {
   }
 
   salva(pagamento, callback) {
-    console.log(pagamento)
     this.connection.query('INSERT INTO pagamentos SET ?', pagamento, callback)
 
     this.connection.end()
