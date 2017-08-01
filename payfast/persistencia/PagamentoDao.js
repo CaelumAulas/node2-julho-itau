@@ -1,34 +1,27 @@
-const mysql = require('mysql')
-
 class PagamentoDao {
-  constructor() {
-    this.connection = mysql.createConnection({
-      host     : 'localhost',
-      user     : 'root',
-      password : '',
-      database : 'payfast'
-    })
+  constructor(connnection) {
+    this.connection = connnection
   }
 
   salva(pagamento, callback) {
-    console.log(this.connection)
+    console.log(pagamento)
     this.connection.query('INSERT INTO pagamentos SET ?', pagamento, callback)
 
-    connection.end()
+    this.connection.end()
   }
 
   lista(callback) {
     this.connection.query('SELECT * FROM pagamentos', callback)
 
-    connection.end()
+    this.connection.end()
   }
 
   buscaPorId(id, callback) {
     this.connection.query('SELECT * FROM pagamentos WHERE id=?', [id], callback)
 
-    connection.end()
+    this.connection.end()
   }
-}3
+}
 
 module.exports = function() {
   return PagamentoDao

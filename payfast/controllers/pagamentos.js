@@ -6,7 +6,7 @@ module.exports = (app) => {
   app.post('/pagamento', (req, res) => {
     const pagamento = req.body
     const connection = app.persistencia.connectionFactory()
-    const pagamentoDao = new app.persistencia.PagamentoDao()
+    const pagamentoDao = new app.persistencia.PagamentoDao(connection)
 
     pagamento.status = 'CRIADO'
     pagamento.data = new Date
