@@ -6,7 +6,7 @@ module.exports = function() {
 
   app.use(bodyParser.json())
 
-  load('controllers').into(app)
+  load('controllers').then('persistencia').into(app)
 
   return app
 }

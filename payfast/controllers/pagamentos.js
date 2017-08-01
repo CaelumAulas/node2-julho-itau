@@ -4,28 +4,17 @@ module.exports = (app) => {
   })
 
   app.post('/pagamento', (req, res) => {
-    const mysql = require('mysql')
     const pagamento = req.body
+    const connection = app.persistencia.connectionFactory()
+    const pagamentoDao = new app.persistencia.PagamentoDao()
 
-    const connection = mysql.createConnection({
-      user: 'root',
-      password: '',
-      database: 'payfast',
-      host: 'localhost'
-    })
+    pagamento.status = 'CRIADO'
+    pagamento.data = new Date
 
-    connection.query('INSERT INTO pagamentos SET ?', pagamento, (err, result, fields) => {
+    pagamentoDao.salva(pagamento, (err, result, fields) => {
       if (!err) {
-        res.send('Pagamentos salvo com sucesso')
+        res.json(pagamento)
       }
     })
-
-    connection.end()
   })
 }
-
-
-
-$botao.on('click', function() {
-
-})
