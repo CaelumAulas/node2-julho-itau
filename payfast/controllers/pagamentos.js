@@ -3,7 +3,31 @@
 
 module.exports = (app) => {
   app.get('/pagamento', (req, res) => {
-    res.send('JSON com todos os pagemntos')
+    const connection = app.persistencia.connectionFactory()
+    const pagamentoDao = new app.persistencia.PagamentoDao(connection)
+
+    pagamentoDao.lista((err, result, fields) => {
+      if (!err) {
+        res.json(result)
+      } else {
+        res.status(404).json(err)
+      }
+
+    })
+  })
+
+  app.get('/pagamento/:id', (req, res) => {
+    const connection = app.persistencia.connectionFactory()
+    const pagamentoDao = new app.persistencia.PagamentoDao(connection)
+    const id = req.params.id
+
+    pagamentoDao.buscaPorId(id, (err, result, fields) => {
+      if (!err) {
+        res.json(result)
+      } else {
+        res.status(404).json(err)
+      }
+    })
   })
 
   app.post('/pagamento', (req, res) => {
@@ -26,8 +50,37 @@ module.exports = (app) => {
 
       pagamentoDao.salva(pagamento, (err, result, fields) => {
         if (!err) {
-          res.location(`/pagamento/${result.insertId}`)
-          res.status(201).json(pagamento)
+          const resposta = {
+            data: pagamento,
+            links: [
+              {
+                method: 'PUT',
+                href: `http://localhost:3000/pagamento/${result.insertId}`,
+                rel: 'cofirma'
+              },
+              {
+                method: 'DELETE',
+                href: `http://localhost:3000/pagamento/${result.insertId}`,
+                rel: 'cancelar'
+              },
+              {
+                method: 'GET',
+                href: `http://localhost:3000/pagamento/${result.insertId}`,
+                rel: 'confirma'
+              },
+              {
+                method: 'PATCH',
+                href: `http://localhost:3000/pagamento/${result.insertId}`,
+                rel: 'cofirma'
+              },
+              {
+                method: 'OPTION',
+                href: `http://localhost:3000/pagamento`,
+                rel: 'head'
+              }
+            ]
+          }
+          res.status(201).json(resposta)
         } else {
           err.sql = ''
           res.status(400).json(err)
