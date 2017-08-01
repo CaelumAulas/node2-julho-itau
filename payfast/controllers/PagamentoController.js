@@ -1,10 +1,11 @@
-// httpstatuses.com
-// httpstatusdogs.com
+class PagamentoController {
+  constructor(app) {
+    this.app = app
+  }
 
-module.exports = (app) => {
-  app.get('/pagamento', (req, res) => {
-    const connection = app.persistencia.connectionFactory()
-    const pagamentoDao = new app.persistencia.PagamentoDao(connection)
+  lista(req, res) {
+    const connection = this.app.persistencia.connectionFactory()
+    const pagamentoDao = new this.app.persistencia.PagamentoDao(connection)
 
     pagamentoDao.lista((err, result, fields) => {
       if (!err) {
@@ -14,11 +15,11 @@ module.exports = (app) => {
       }
 
     })
-  })
+  }
 
-  app.get('/pagamento/:id', (req, res) => {
-    const connection = app.persistencia.connectionFactory()
-    const pagamentoDao = new app.persistencia.PagamentoDao(connection)
+  buscaPorId(req, res) {
+    const connection = this.app.persistencia.connectionFactory()
+    const pagamentoDao = new this.app.persistencia.PagamentoDao(connection)
     const id = req.params.id
 
     pagamentoDao.buscaPorId(id, (err, result, fields) => {
@@ -28,11 +29,11 @@ module.exports = (app) => {
         res.status(404).json(err)
       }
     })
-  })
+  }
 
-  app.post('/pagamento', (req, res) => {
+  salva(req, res) {
     const pagamento = req.body
-    let errors = false;
+    let errors = false
     pagamento.status = "CRIADO"
     pagamento.date = new Date
 
@@ -45,8 +46,8 @@ module.exports = (app) => {
     errors = req.validationErrors()
 
     if(!errors) {
-      const connection = app.persistencia.connectionFactory()
-      const pagamentoDao = new app.persistencia.PagamentoDao(connection)
+      const connection = this.app.persistencia.connectionFactory()
+      const pagamentoDao = new this.app.persistencia.PagamentoDao(connection)
 
       pagamentoDao.salva(pagamento, (err, result, fields) => {
         if (!err) {
@@ -89,5 +90,9 @@ module.exports = (app) => {
     } else {
       res.status(400).json(errors)
     }
-  })
+  }
+}
+
+module.exports = function() {
+  return PagamentoController
 }
