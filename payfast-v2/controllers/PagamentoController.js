@@ -1,3 +1,5 @@
+const request = require('request')
+
 class PagamentoController {
   constructor(app) {
     this.app = app
@@ -92,22 +94,26 @@ class PagamentoController {
   }
 
   deleta(req, res) {
-    const token = req.headers.Authorization
+    const token = req.headers.authorization
 
-    if (token) {
-      const id = req.params.id
-      const connection = this.app.persistencia.connectionFactory()
-      const pagamentoDao = new this.app.persistencia.PagamentoDao(connection)
+    request.get(`http://localhost:3003/validaToken/${token}`, (err, result) => {
+      if (result.statusCode == 200) {
+        const id = req.params.id
+        const connection = this.app.persistencia.connectionFactory()
+        const pagamentoDao = new this.app.persistencia.PagamentoDao(connection)
 
-      pagamentoDao.deleta(id, (err, result, fields) => {
-        if(!err) {
-          res.json(`Produto com o id=${id} foi deletado com sucesso`)
-        } else {
-          res.status(404).json('Deu ruim')
-        }
+        pagamentoDao.deleta(id, (err, result, fields) => {
+          if(!err) {
+            res.json(`Produto com o id=${id} foi deletado com sucesso`)
+          } else {
+            res.status(404).json('Deu ruim')
+          }
 
-      })
-    }
+        })
+      } else {
+        res.status(401).json({msg: `Seu token não é válido: ${token}`})
+      }
+    })
   }
 }
 
