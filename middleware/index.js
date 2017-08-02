@@ -8,8 +8,10 @@ app.get('/v1/pagamento', (req, res) => {
     res.json(JSON.parse(result.body))
   })
 })
-// app.get('/v1/pagamento/:id', )
-// app.post('/v1/pagamento', )
+app.delete('/v2/pagamento/:id', (req, res) {
+  const id = req.params.id
+  request.delete(`http://localhost:3002/pagamento/${id}`)
+})
 
 app.listen(port, () => {
   console.log(`Servidor de pé em http://localhost:${port}`)

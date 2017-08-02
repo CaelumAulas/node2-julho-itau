@@ -8,6 +8,11 @@ module.exports = function() {
   app.use(bodyParser.json())
   app.use(expressValidator())
 
+  app.use((req, res, next) => {
+    console.log('URL que foi executada ' + req.url)
+    next()
+  })
+
   load('controllers')
     .then('routes')
     .then('persistencia')

@@ -92,18 +92,22 @@ class PagamentoController {
   }
 
   deleta(req, res) {
-    const id = req.params.id
-    const connection = this.app.persistencia.connectionFactory()
-    const pagamentoDao = new this.app.persistencia.PagamentoDao(connection)
+    const token = req.headers.Authorization
 
-    pagamentoDao.deleta(id, (err, result, fields) => {
-      if(!err) {
-        res.json(`Produto com o id=${id} foi deletado com sucesso`)
-      } else {
-        res.status(404).json('Deu ruim')
-      }
+    if (token) {
+      const id = req.params.id
+      const connection = this.app.persistencia.connectionFactory()
+      const pagamentoDao = new this.app.persistencia.PagamentoDao(connection)
 
-    })
+      pagamentoDao.deleta(id, (err, result, fields) => {
+        if(!err) {
+          res.json(`Produto com o id=${id} foi deletado com sucesso`)
+        } else {
+          res.status(404).json('Deu ruim')
+        }
+
+      })
+    }
   }
 }
 
