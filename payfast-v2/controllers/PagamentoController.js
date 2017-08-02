@@ -96,6 +96,29 @@ class PagamentoController {
   deleta(req, res) {
     const token = req.headers.authorization
 
+    if (!token) {
+      res.status(301).json({
+        msg: 'Você tem que fazer um request com a estrutura proposta no JSON que está com a chave send',
+        method: 'GET',
+        link: 'http://localhost:3003/token/:origin',
+        
+        send: {
+          header : {
+            alg: 'HS256',
+            typ: 'JWT'
+          },
+          body: {
+            sub: 'payfast',
+            name: 'John',
+            pass: '1234',
+            admin: true
+          }
+        }
+      })
+
+      return
+    }
+
     request.get(`http://localhost:3003/validaToken/${token}`, (err, result) => {
       if (result.statusCode == 200) {
         const id = req.params.id
